@@ -9,8 +9,8 @@
 #
 #   Post.conditions(:published => true).select(:title).with(:author)
 #
-# All named scopes are called the same, except for +:include+, which is now
-# called +:with+, because +include+ is a reserved method.
+# All named scopes are called the same, except for +include+, which is now
+# called +with+, because +include+ is a reserved method.
 #
 # Reuse them by making class methods:
 #
