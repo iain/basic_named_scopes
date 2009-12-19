@@ -5,13 +5,13 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "basic_named_scopes"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{Basic named scopes for ActiveRecord makes all find-parameters a named scope}
+    gem.description = %Q{Make your queries prettier and more reusable by having a named scope for every find-parameter. As easy as Post.include(:author, :comments)}
     gem.email = "iain@iain.nl"
     gem.homepage = "http://github.com/iain/basic_named_scopes"
     gem.authors = ["Iain Hecker"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.add_development_dependency "temping", ">= 1.1.0"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

@@ -1,17 +1,81 @@
-= basic_named_scopes
+= BasicNamedScopes
 
-Description goes here.
+Basic named scopes for ActiveRecord. Propagates the parameters of the
+find-method as named scopes, for easy reusability and prettier code.
 
-== Note on Patches/Pull Requests
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+Instead of writing:
+
+  Post.all(:conditions => { :published => true }, :select => :title, :includes => :author)
+
+You can now write:
+
+  Post.conditions(:published => true).select(:title).include(:author)
+
+Reuse them by making class methods:
+
+  class Post < ActiveRecord::Base
+
+    def self.published
+      conditions(:published => true)
+    end
+
+    def self.visible
+      conditions(:visible => true)
+    end
+
+    def self.index
+      published.visible
+    end
+
+  end
+
+Also, the +all+-method is a named scope now, so you can chain after callling
+all, for greater flexibility.
+
+  Post.all.published
+
+Arrays can be used as multple parameters too, sparing you some brackets.
+
+  Post.include(:author, :comments).conditions("name LIKE ?", query)
+
+The +read_only+ and +lock+ scopes default to true, but can be adjusted.
+
+  Post.readonly         # => same as Post.all(:readonly => true)
+  Post.readonly(false)  # => same as Post.all(:readonly => false)
+
+== Why?
+
+NamedScopes are really handy and they should play a more central theme in ActiveRecord.
+While I heard that ActiveRecord 3 will support similar syntax, there is no reason to wait
+any longer.
+
+I find defining named scopes very ugly, especially when dealing with parameters.
+Just compare the amount of curly braces!
+
+  # Using normal named scope:
+  named_scope :name_like, lambda { |query| { :conditions => ["name LIKE ?", query] } }
+
+  # Using BasicNamedScopes
+  def self.name_like(query)
+    conditions("name LIKE ?", query)
+  end
+
+Also, regular named scopes don't support using other named scopes at all!
+
+I found myself implementing (mostly conditions, but others too) so often, that
+a little gem like this would be the obvious choice. Use it if a gem like
+searchlogic is overkill for your needs.
+
+== Installing
+
+The gem is called "basic_named_scopes". You know how to install it.
+
+  gem install basic_named_scopes
+
+Use it in Rails:
+
+  config.gem "basic_named_scopes"
 
 == Copyright
 
-Copyright (c) 2009 Iain Hecker. See LICENSE for details.
+Copyright (c) 2009 Iain Hecker. Released under the MIT License.
