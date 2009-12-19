@@ -7,8 +7,15 @@ describe "BasicNamedScopes" do
       with_columns do |table|
         table.boolean :published
         table.boolean :visible
+        table.integer :author_id
       end
-      extend BasicNamedScopes
+      belongs_to :author
+    end
+    create_model :authors do
+      with_columns do |table|
+        table.string :name
+      end
+      has_many :posts
     end
   end
 
@@ -37,7 +44,13 @@ describe "BasicNamedScopes" do
     subject.should == [ @published ]
   end
 
-  [:conditions, :order, :group, :having, :limit, :offset, :joins, :include, :select, :from].each do |option|
+  it "should have a scope named 'with' but internally use 'include' as parameter" do
+    Post.create!(:author => Author.create!)
+    Author.should_receive(:find).and_return([])
+    Post.with(:author).to_a
+  end
+
+  [:conditions, :order, :group, :having, :limit, :offset, :joins, :with, :select, :from].each do |option|
     it "should known #{option} ActiveRecord::Base.find" do
       Post.send(option).class.should be_scope
     end

@@ -5,11 +5,14 @@ find-method as named scopes, for easy reusability and prettier code.
 
 Instead of writing:
 
-  Post.all(:conditions => { :published => true }, :select => :title, :includes => :author)
+  Post.all(:conditions => { :published => true }, :select => :title, :include => :author)
 
 You can now write:
 
-  Post.conditions(:published => true).select(:title).include(:author)
+  Post.conditions(:published => true).select(:title).with(:author)
+
+All named scopes are called the same, except for +:include+, which is now
+called +:with+, because +include+ is a reserved method.
 
 Reuse them by making class methods:
 
@@ -36,12 +39,14 @@ all, for greater flexibility.
 
 Arrays can be used as multple parameters too, sparing you some brackets.
 
-  Post.include(:author, :comments).conditions("name LIKE ?", query)
+  Post.with(:author, :comments).conditions("name LIKE ?", query)
 
 The +read_only+ and +lock+ scopes default to true, but can be adjusted.
 
   Post.readonly         # => same as Post.all(:readonly => true)
   Post.readonly(false)  # => same as Post.all(:readonly => false)
+
+
 
 == Why?
 
