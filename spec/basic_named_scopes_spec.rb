@@ -50,6 +50,12 @@ describe "BasicNamedScopes" do
     Post.with(:author).to_a
   end
 
+  it "should use a scope named 'where' but internally use 'conditions' as parameter" do
+    subject = Post.where("published = ?", true)
+    subject.class.should be_scope
+    subject.should == [ @published ]
+  end
+
   [:conditions, :order, :group, :having, :limit, :offset, :joins, :with, :select, :from].each do |option|
     it "should known #{option} ActiveRecord::Base.find" do
       Post.send(option).class.should be_scope

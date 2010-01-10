@@ -14,6 +14,8 @@ You can now write:
 All named scopes are called the same, except for +include+, which is now
 called +with+, because +include+ is a reserved method.
 
+Also, the scope +conditions+ is aliased as +where+, just as in ActiveRecord 3.
+
 Reuse them by making class methods:
 
   class Post < ActiveRecord::Base

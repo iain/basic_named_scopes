@@ -11,7 +11,8 @@ begin
     gem.homepage = "http://github.com/iain/basic_named_scopes"
     gem.authors = ["Iain Hecker"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
-    gem.add_development_dependency "temping", ">= 1.1.0"
+    gem.add_development_dependency "temping", ">= 1.3.0"
+    gem.add_development_dependency "activerecord", "< 3.0.pre"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

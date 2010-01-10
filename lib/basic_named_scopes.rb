@@ -12,6 +12,8 @@
 # All named scopes are called the same, except for +include+, which is now
 # called +with+, because +include+ is a reserved method.
 #
+# Also, the scope +conditions+ is aliased as +where+, just as in ActiveRecord 3.
+#
 # Reuse them by making class methods:
 #
 #   class Post < ActiveRecord::Base
@@ -49,6 +51,9 @@ module BasicNamedScopes
   # These are the normal parameters that will be turned into named scopes.
   FIND_PARAMETERS       = [:conditions, :order, :group, :having, :limit, :offset, :joins, :select, :from]
 
+  # These are aliased parameters. The keys are scope names, the values are the option they represent.
+  FIND_ALIASES          = { :where => :conditions, :with => :include }
+
   # These are the parameters that want a boolean.
   FIND_BOOLEAN_SWITCHES = [:readonly, :lock]
 
@@ -62,9 +67,11 @@ module BasicNamedScopes
     end
 
     def apply_basic_named_scopes(model)
-      model.named_scope(:with, expand_into_array(:include))
       FIND_PARAMETERS.each do |parameter|
         model.named_scope(parameter, expand_into_array(parameter))
+      end
+      FIND_ALIASES.each do |name, parameter|
+        model.named_scope(name, expand_into_array(parameter))
       end
       FIND_BOOLEAN_SWITCHES.each do |parameter|
         model.named_scope(parameter, default_to_true(parameter))
